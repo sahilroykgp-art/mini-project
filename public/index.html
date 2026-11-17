@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Emergency Management System (HEMS) | Graphic Era University</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --primary-light: #e0f2fe;
+            --danger: #ef4444;
+            --danger-bg: #fee2e2;
+            --warning: #f59e0b;
+            --warning-bg: #fef3c7;
+            --success: #10b981;
+            --success-bg: #d1fae5;
+            --info: #6366f1;
+            --info-bg: #e0e7ff;
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --radius-sm: 6px;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 60px;
+        }
+
+        /* Top Banner & Header */
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #ffffff;
+            padding: 24px 32px;
+            box-shadow: var(--shadow-lg);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .header-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .brand-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-icon {
+            background: var(--danger);
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 800;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+        }
+
+        .brand-title h1 {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-title p {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .student-tag {
+            text-align: right;
+            font-size: 13px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .student-tag span {
+            color: #38bdf8;
+            font-weight: 700;
+        }
+
+        /* Container */
+        .main-container {
+            max-width: 1300px;
+            margin: 24px auto;
+            padding: 0 20px;
+        }
+
+        /* Metric Cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+
+        .metric-card.blue::before { background: var(--primary); }
+        .metric-card.red::before { background: var(--danger); }
+        .metric-card.green::before { background: var(--success); }
+        .metric-card.purple::before { background: var(--info); }
+
+        .metric-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: 800;
+            margin-top: 6px;
+        }
+
+        .metric-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Navigation Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 24px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            background: #ffffff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Layout Grid */
+        .layout-2col {
+            display: grid;
+            grid-template-columns: 1.1fr 1.9fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 900px) {
+            .layout-2col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #334155;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 11px 20px;
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: var(--radius-md);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+        }
+
+        /* Triage Selector */
+        .triage-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .triage-option {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.15s;
+            font-size: 13px;
+        }
+
+        .triage-option:hover {
+            border-color: #94a3b8;
+            background: #f8fafc;
+        }
+
+        .triage-option input {
+            margin-right: 12px;
+            accent-color: var(--primary);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-l1 { background: #fee2e2; color: #b91c1c; border: 1px solid #f87171; }
+        .badge-l2 { background: #ffedd5; color: #c2410c; border: 1px solid #fb923c; }
+        .badge-l3 { background: #fef3c7; color: #b45309; border: 1px solid #fde047; }
+        .badge-l4 { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; }
+        .badge-l5 { background: #d1fae5; color: #047857; border: 1px solid #6ee7b7; }
+
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        th {
+            background: #f8fafc;
+            padding: 12px 14px;
+            font-weight: 700;
+            color: #475569;
+            border-bottom: 2px solid var(--border);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Trauma Bay Banner */
+        .trauma-bay {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            color: white;
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .trauma-info h3 {
+            font-size: 14px;
+            color: #a5b4fc;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .trauma-patient {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .trauma-details {
+            font-size: 13px;
+            color: #cbd5e1;
+            margin-top: 4px;
+        }
+
+        .trauma-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Bed Grid */
+        .bed-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+        }
+
+        .bed-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            background: #ffffff;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .bed-card.vacant {
+            border-left: 4px solid var(--success);
+            background: #f0fdf4;
+        }
+
+        .bed-card.occupied {
+            border-left: 4px solid var(--danger);
+            background: #fef2f2;
+        }
+
+        .bed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .bed-patient {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .bed-time {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .btn-discharge {
+            margin-top: 10px;
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: var(--radius-sm);
+            background: white;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn-discharge:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Code Viewer */
+        .code-block {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 20px;
+            border-radius: var(--radius-md);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            max-height: 500px;
+            line-height: 1.6;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="brand-title">
+                <div class="brand-icon">+</div>
+                <div>
+                    <h1>Hospital Emergency Management System (HEMS)</h1>
+                    <p>Clinical Priority Queue & Emergency Ward Bed Controller</p>
+                </div>
+            </div>
+            <div class="student-tag">
+                <div>Candidate: <span>Sahil Roy</span> (Roll No. 2510610142)</div>
+                <div style="font-size: 11px; color: #94a3b8;">Department of Computer Applications • Graphic Era (Deemed to be University)</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+
+        <!-- Top Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card blue">
+                <span class="metric-label">Waiting in Queue</span>
+                <span class="metric-value" id="stat-waiting">0</span>
+                <span class="metric-sub">Sorted by Triage Priority</span>
+            </div>
+            <div class="metric-card red">
+                <span class="metric-label">Trauma Bay Status</span>
+                <span class="metric-value" id="stat-trauma">Idle</span>
+                <span class="metric-sub">Active Resuscitation Bay</span>
+            </div>
+            <div class="metric-card green">
+                <span class="metric-label">Available Ward Beds</span>
+                <span class="metric-value" id="stat-beds">10 / 10</span>
+                <span class="metric-sub">Emergency Inpatient Beds</span>
+            </div>
+            <div class="metric-card purple">
+                <span class="metric-label">Treated Today</span>
+                <span class="metric-value" id="stat-treated">0</span>
+                <span class="metric-sub">Total Advised / Discharged</span>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('reception')">📋 Receptionist & Queue</button>
+            <button class="tab-btn" onclick="switchTab('doctor')">🩺 Medical Staff & Trauma Bay</button>
+            <button class="tab-btn" onclick="switchTab('beds')">🛏️ Bed Ward (10 Beds)</button>
+            <button class="tab-btn" onclick="switchTab('audit')">📑 Audit Log & Reports</button>
+            <button class="tab-btn" onclick="switchTab('synopsis')">🎓 BCA Synopsis & C Source</button>
+        </div>
+
+        <!-- TAB 1: RECEPTIONIST & QUEUE -->
+        <div id="tab-reception" class="tab-content active">
+            <div class="layout-2col">
+                <!-- Registration Form -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2><span>📝</span> Emergency Patient Triage</h2>
+                        <span class="badge badge-l1">Live Registration</span>
+                    </div>
+                    <form id="patientForm" onsubmit="handleRegisterPatient(event)">
+                        <div class="form-group">
+                            <label>Patient Full Name *</label>
+                            <input type="text" id="p-name" class="form-control" placeholder="e.g. Rajesh Sharma" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Age (Years) *</label>
+                                <input type="number" id="p-age" class="form-control" min="0" max="120" placeholder="52" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Gender *</label>
+                                <select id="p-gender" class="form-control" required>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Number</label>
+                            <input type="text" id="p-contact" class="form-control" placeholder="9876543210">
+                        </div>
+                        <div class="form-group">
+                            <label>Chief Complaint / Symptoms *</label>
+                            <input type="text" id="p-complaint" class="form-control" placeholder="e.g. Acute chest pain, shortness of breath" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Clinical Triage Urgency Level *</label>
+                            <div class="triage-options">
+                                <label class="triage-option">
+                                    <input type="radio" name="triage" value="1" required>
+                                    <div><span class="badge badge-l1">Level 1: Resuscitation</span> Cardiac arrest, acute trauma, severe shock</div>
+                                </label>
+                                <label class="triage-option">
+                                    <input type="radio" name="triage" value="2">
+                                    <div><span class="badge badge-l2">Level 2: Emergent</span> Chest pain, stroke signs, severe hemorrhage</div>
+                                </label>
+                                <label class="triage-option">
+                                    <input type="radio" name="triage" value="3" checked>
+                                    <div><span class="badge badge-l3">Level 3: Urgent</span> Severe pain, high fever, abdominal distress</div>
+                                </label>
+                                <label class="triage-option">
+                                    <input type="radio" name="triage" value="4">
+                                    <div><span class="badge badge-l4">Level 4: Less Urgent</span> Mild injuries, simple sprains, lacerations</div>
+                                </label>
+                                <label class="triage-option">
+                                    <input type="radio" name="triage" value="5">
+                                    <div><span class="badge badge-l5">Level 5: Non-Urgent</span> Routine dressing, minor symptoms</div>
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 10px;">
+                            ➕ Enqueue to Emergency Priority Queue
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Priority Queue Live Display -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2><span>⚡</span> Real-Time Emergency Priority Queue</h2>
+                        <span id="queue-badge" class="badge badge-l4">0 Patients Waiting</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Pos</th>
+                                    <th>Token</th>
+                                    <th>Patient</th>
+                                    <th>Age/Sex</th>
+                                    <th>Triage Priority</th>
+                                    <th>Complaint</th>
+                                </tr>
+                            </thead>
+                            <tbody id="queue-table-body">
+                                <tr>
+                                    <td colspan="6" class="empty-state">
+                                        <div class="empty-icon">🟢</div>
+                                        <div>Queue is currently empty. No emergency patients waiting.</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: MEDICAL STAFF & TRAUMA BAY -->
+        <div id="tab-doctor" class="tab-content">
+            <!-- Active Trauma Bay -->
+            <div class="trauma-bay">
+                <div class="trauma-info">
+                    <h3>Emergency Trauma Bay — Active Treatment Bay</h3>
+                    <div class="trauma-patient" id="serving-name">No Patient in Treatment</div>
+                    <div class="trauma-details" id="serving-details">Trauma bay is idle and ready to admit the next critical emergency patient.</div>
+                </div>
+                <div class="trauma-actions">
+                    <button class="btn btn-danger" onclick="callNextPatient()">
+                        🚨 Call Highest Priority Patient (Dequeue)
+                    </button>
+                    <button class="btn btn-success" id="btn-admit-bed" onclick="admitCurrentToBed()" disabled>
+                        🛏️ Admit to Bed
+                    </button>
+                    <button class="btn btn-outline" style="color:white; border-color:rgba(255,255,255,0.4);" id="btn-discharge" onclick="dischargeCurrentPatient()" disabled>
+                        ✅ Discharge Patient
+                    </button>
+                </div>
+            </div>
+
+            <!-- Queue preview inside Doctor tab -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><span>👨‍⚕️</span> Up Next for Medical Attention (Ordered by Urgency)</h2>
+                    <button class="btn btn-primary" style="width: auto; padding: 6px 14px; font-size: 12px;" onclick="callNextPatient()">
+                        Advance Next Patient
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Next Up</th>
+                                <th>Token</th>
+                                <th>Patient Name</th>
+                                <th>Category</th>
+                                <th>Complaint</th>
+                                <th>Arrival Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="doctor-queue-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: BED WARD -->
+        <div id="tab-beds" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2><span>🛏️</span> Emergency Ward Bed Manager (10 Beds)</h2>
+                    <div>
+                        <span class="badge badge-l5" id="beds-vacant-badge">10 Vacant</span>
+                        <span class="badge badge-l1" id="beds-occupied-badge">0 Occupied</span>
+                    </div>
+                </div>
+                <div class="bed-grid" id="bed-grid-container">
+                    <!-- Populated dynamically (10 beds) -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: AUDIT LOG & REPORT -->
+        <div id="tab-audit" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2><span>📜</span> Patient Audit Trail (er_patient_log.txt)</h2>
+                    <button class="btn btn-outline" style="width: auto;" onclick="downloadDailyReport()">
+                        📥 Download Daily Report (.txt)
+                    </button>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="log-search" class="form-control" placeholder="Search audit log by patient name or token number..." oninput="filterLogs()">
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Token</th>
+                                <th>Patient Name</th>
+                                <th>Age</th>
+                                <th>Triage</th>
+                                <th>Timestamp</th>
+                                <th>Status</th>
+                                <th>Event Note</th>
+                            </tr>
+                        </thead>
+                        <tbody id="audit-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: SYNOPSIS & C CODE -->
+        <div id="tab-synopsis" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2><span>🎓</span> Project Synopsis Summary</h2>
+                    <span class="badge badge-l4">BCA Final Mini-Project</span>
+                </div>
+                <div style="font-size: 14px; line-height: 1.8; color: #334155;">
+                    <p><strong>Project Title:</strong> Hospital Emergency Management System (HEMS)</p>
+                    <p><strong>Candidate:</strong> Sahil Roy (University Roll No. 2510610142)</p>
+                    <p><strong>Supervisor:</strong> Mr. Shubham Kumar (Assistant Professor)</p>
+                    <p><strong>Institution:</strong> Department of Computer Applications, Graphic Era (Deemed to be University), Dehradun</p>
+                    <p><strong>Core Concept:</strong> Implementing a priority queue data structure in standard C language where incoming patients are triaged into clinical urgency levels (1 to 5). Emergency beds and persistent audit trails are maintained for seamless hospital operations.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2><span>💻</span> Standard C Implementation (main.c)</h2>
+                    <button class="btn btn-outline" style="width: auto;" onclick="copyCCode()">
+                        📋 Copy C Code
+                    </button>
+                </div>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+                    This C code runs in the console using MinGW GCC and fulfills all data structure requirements:
+                </p>
+                <div class="code-block" id="c-code-view">
+// C Source Code is loaded from main.c in this repository.
+// Includes Priority Queue (Linked List), Bed Manager, and File Persistence.
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            Hospital Emergency Management System &bull; Academic Mini-Project &bull; Graphic Era University, Dehradun
+        </footer>
+    </div>
+
+    <!-- Interactive JavaScript Implementation of Priority Queue -->
+    <script>
+        // Data Structures
+        let priorityQueue = [];
+        let nextToken = 1001;
+        let treatedCount = 0;
+        let registeredCount = 0;
+        let currentServing = null;
+        let auditLogs = [];
+
+        // 10 Ward Beds
+        let beds = Array.from({ length: 10 }, (_, i) => ({
+            id: i + 1,
+            occupied: false,
+            patient: null,
+            time: null
+        }));
+
+        // Switch Tab
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+            const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+            if (activeBtn) activeBtn.classList.add('active');
+
+            const content = document.getElementById('tab-' + tabId);
+            if (content) content.classList.add('active');
+        }
+
+        // Triage Helpers
+        function getTriageBadge(level) {
+            switch (parseInt(level)) {
+                case 1: return '<span class="badge badge-l1">Level 1: Resuscitation</span>';
+                case 2: return '<span class="badge badge-l2">Level 2: Emergent</span>';
+                case 3: return '<span class="badge badge-l3">Level 3: Urgent</span>';
+                case 4: return '<span class="badge badge-l4">Level 4: Less Urgent</span>';
+                case 5: return '<span class="badge badge-l5">Level 5: Non-Urgent</span>';
+                default: return '<span class="badge">Unknown</span>';
+            }
+        }
+
+        function getTriageName(level) {
+            switch (parseInt(level)) {
+                case 1: return "Level 1 (Resuscitation)";
+                case 2: return "Level 2 (Emergent)";
+                case 3: return "Level 3 (Urgent)";
+                case 4: return "Level 4 (Less Urgent)";
+                case 5: return "Level 5 (Non-Urgent)";
+                default: return "Unknown";
+            }
+        }
+
+        function getNowTime() {
+            const d = new Date();
+            return d.getFullYear() + '-' +
+                   String(d.getMonth() + 1).padStart(2, '0') + '-' +
+                   String(d.getDate()).padStart(2, '0') + ' ' +
+                   String(d.getHours()).padStart(2, '0') + ':' +
+                   String(d.getMinutes()).padStart(2, '0') + ':' +
+                   String(d.getSeconds()).padStart(2, '0');
+        }
+
+        // Log Event
+        function addLog(token, name, age, triage, status, note) {
+            auditLogs.unshift({
+                token: token,
+                name: name,
+                age: age,
+                triage: triage,
+                time: getNowTime(),
+                status: status,
+                note: note
+            });
+            renderAuditLogs();
+        }
+
+        // Algorithm 1: Enqueue in Priority Queue
+        function handleRegisterPatient(e) {
+            e.preventDefault();
+            const name = document.getElementById('p-name').value.trim();
+            const age = document.getElementById('p-age').value;
+            const gender = document.getElementById('p-gender').value;
+            const contact = document.getElementById('p-contact').value.trim() || 'N/A';
+            const complaint = document.getElementById('p-complaint').value.trim();
+            const triage = parseInt(document.querySelector('input[name="triage"]:checked').value);
+
+            const token = nextToken++;
+            const patient = {
+                token,
+                name,
+                age,
+                gender,
+                contact,
+                complaint,
+                triage,
+                time: getNowTime()
+            };
+
+            // Priority Queue Insertion (Ordered by Triage 1 to 5; FIFO for same priority)
+            let inserted = false;
+            for (let i = 0; i < priorityQueue.length; i++) {
+                if (patient.triage < priorityQueue[i].triage) {
+                    priorityQueue.splice(i, 0, patient);
+                    inserted = true;
+                    break;
+                }
+            }
+            if (!inserted) {
+                priorityQueue.push(patient);
+            }
+
+            registeredCount++;
+            addLog(token, name, age, triage, 'Waiting', 'Registered in ER');
+
+            // Reset Form
+            document.getElementById('patientForm').reset();
+            document.querySelector('input[name="triage"][value="3"]').checked = true;
+
+            updateUI();
+            alert(`✅ Patient ER-${token} (${name}) registered and enqueued with ${getTriageName(triage)}!`);
+        }
+
+        // Algorithm 2: Dequeue Highest Priority Patient
+        function callNextPatient() {
+            if (priorityQueue.length === 0) {
+                alert('ℹ️ No patients currently waiting in the emergency priority queue.');
+                return;
+            }
+
+            if (currentServing) {
+                const proceed = confirm(`Patient ER-${currentServing.token} (${currentServing.name}) is currently in treatment.\nDo you want to complete their treatment and call the next patient?`);
+                if (!proceed) return;
+                dischargeCurrentPatient();
+            }
+
+            // Dequeue Head
+            currentServing = priorityQueue.shift();
+            treatedCount++;
+            addLog(currentServing.token, currentServing.name, currentServing.age, currentServing.triage, 'In Treatment', 'Called to Trauma Bay');
+
+            updateUI();
+        }
+
+        // Admit Current Patient to Bed
+        function admitCurrentToBed() {
+            if (!currentServing) return;
+            const vacantBed = beds.find(b => !b.occupied);
+            if (!vacantBed) {
+                alert('🚨 All 10 Emergency Ward Beds are currently occupied!');
+                return;
+            }
+
+            vacantBed.occupied = true;
+            vacantBed.patient = currentServing;
+            vacantBed.time = getNowTime();
+
+            addLog(currentServing.token, currentServing.name, currentServing.age, currentServing.triage, 'Admitted', `Bed #${vacantBed.id} Allocated`);
+            alert(`✅ Patient ER-${currentServing.token} admitted to Bed #${vacantBed.id}.`);
+
+            currentServing = null;
+            updateUI();
+        }
+
+        // Discharge Current Patient
+        function dischargeCurrentPatient() {
+            if (!currentServing) return;
+            addLog(currentServing.token, currentServing.name, currentServing.age, currentServing.triage, 'Discharged', 'Treatment Completed');
+            alert(`✅ Patient ER-${currentServing.token} (${currentServing.name}) discharged.`);
+            currentServing = null;
+            updateUI();
+        }
+
+        // Discharge Bed
+        function dischargeBed(bedId) {
+            const bed = beds.find(b => b.id === bedId);
+            if (!bed || !bed.occupied) return;
+
+            addLog(bed.patient.token, bed.patient.name, bed.patient.age, bed.patient.triage, 'Discharged', `Discharged from Bed #${bed.id}`);
+            alert(`✅ Bed #${bed.id} has been vacated and sanitized.`);
+
+            bed.occupied = false;
+            bed.patient = null;
+            bed.time = null;
+
+            updateUI();
+        }
+
+        // Update UI
+        function updateUI() {
+            // Metrics
+            document.getElementById('stat-waiting').textContent = priorityQueue.length;
+            document.getElementById('stat-treated').textContent = treatedCount;
+            const occupiedBeds = beds.filter(b => b.occupied).length;
+            document.getElementById('stat-beds').textContent = `${10 - occupiedBeds} / 10`;
+            document.getElementById('stat-trauma').textContent = currentServing ? `ER-${currentServing.token}` : 'Idle';
+
+            // Queue Badge
+            document.getElementById('queue-badge').textContent = `${priorityQueue.length} Patient(s) Waiting`;
+
+            // Queue Table
+            const tbody = document.getElementById('queue-table-body');
+            if (priorityQueue.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <div class="empty-icon">🟢</div>
+                            <div>Queue is currently empty. No emergency patients waiting.</div>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                tbody.innerHTML = priorityQueue.map((p, idx) => `
+                    <tr>
+                        <td><strong>#${idx + 1}</strong></td>
+                        <td><code>ER-${p.token}</code></td>
+                        <td><strong>${p.name}</strong></td>
+                        <td>${p.age}y / ${p.gender}</td>
+                        <td>${getTriageBadge(p.triage)}</td>
+                        <td>${p.complaint}</td>
+                    </tr>
+                `).join('');
+            }
+
+            // Doctor Station Table
+            const docQueue = document.getElementById('doctor-queue-body');
+            if (priorityQueue.length === 0) {
+                docQueue.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding:20px;">No patients waiting.</td></tr>`;
+            } else {
+                docQueue.innerHTML = priorityQueue.map((p, idx) => `
+                    <tr>
+                        <td><strong>#${idx + 1}</strong></td>
+                        <td><code>ER-${p.token}</code></td>
+                        <td><strong>${p.name}</strong></td>
+                        <td>${getTriageBadge(p.triage)}</td>
+                        <td>${p.complaint}</td>
+                        <td>${p.time}</td>
+                    </tr>
+                `).join('');
+            }
+
+            // Trauma Bay Display
+            if (currentServing) {
+                document.getElementById('serving-name').textContent = `ER-${currentServing.token} — ${currentServing.name}`;
+                document.getElementById('serving-details').innerHTML = `
+                    Age: ${currentServing.age} | ${currentServing.gender} | Contact: ${currentServing.contact}<br>
+                    <strong>Chief Complaint:</strong> ${currentServing.complaint} &bull; ${getTriageBadge(currentServing.triage)}
+                `;
+                document.getElementById('btn-admit-bed').disabled = false;
+                document.getElementById('btn-discharge').disabled = false;
+            } else {
+                document.getElementById('serving-name').textContent = 'No Patient in Treatment';
+                document.getElementById('serving-details').textContent = 'Trauma bay is idle and ready to admit the next critical emergency patient.';
+                document.getElementById('btn-admit-bed').disabled = true;
+                document.getElementById('btn-discharge').disabled = true;
+            }
+
+            // Beds Grid
+            document.getElementById('beds-vacant-badge').textContent = `${10 - occupiedBeds} Vacant`;
+            document.getElementById('beds-occupied-badge').textContent = `${occupiedBeds} Occupied`;
+            const bedContainer = document.getElementById('bed-grid-container');
+            bedContainer.innerHTML = beds.map(b => `
+                <div class="bed-card ${b.occupied ? 'occupied' : 'vacant'}">
+                    <div class="bed-header">
+                        <span>Bed #${b.id}</span>
+                        <span class="badge ${b.occupied ? 'badge-l1' : 'badge-l5'}">${b.occupied ? 'Occupied' : 'Vacant'}</span>
+                    </div>
+                    ${b.occupied ? `
+                        <div class="bed-patient">ER-${b.patient.token}: ${b.patient.name}</div>
+                        <div class="bed-time">Admitted: ${b.time}</div>
+                        <button class="btn-discharge" onclick="dischargeBed(${b.id})">Discharge Bed</button>
+                    ` : `
+                        <div style="font-size:12px; color:#10b981; padding:8px 0;">Available for critical admission</div>
+                    `}
+                </div>
+            `).join('');
+        }
+
+        // Render Audit Logs
+        function renderAuditLogs(filter = '') {
+            const tbody = document.getElementById('audit-table-body');
+            const filtered = auditLogs.filter(l => 
+                l.name.toLowerCase().includes(filter.toLowerCase()) || 
+                String(l.token).includes(filter)
+            );
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px; color:#94a3b8;">No audit entries found.</td></tr>`;
+            } else {
+                tbody.innerHTML = filtered.map(l => `
+                    <tr>
+                        <td><code>ER-${l.token}</code></td>
+                        <td><strong>${l.name}</strong></td>
+                        <td>${l.age}</td>
+                        <td>${getTriageBadge(l.triage)}</td>
+                        <td>${l.time}</td>
+                        <td><span class="badge ${l.status === 'Discharged' ? 'badge-l5' : (l.status === 'Admitted' ? 'badge-l2' : 'badge-l4')}">${l.status}</span></td>
+                        <td>${l.note}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function filterLogs() {
+            const q = document.getElementById('log-search').value;
+            renderAuditLogs(q);
+        }
+
+        function downloadDailyReport() {
+            const occupied = beds.filter(b => b.occupied).length;
+            let report = "========================================================================================\n";
+            report += "                        HOSPITAL EMERGENCY ROOM - DAILY AUDIT REPORT                    \n";
+            report += "========================================================================================\n";
+            report += `Generated On           : ${getNowTime()}\n`;
+            report += `Emergency Department   : Trauma & Acute Care Center\n`;
+            report += `Total Registered Today : ${registeredCount}\n`;
+            report += `Total Patients Treated : ${treatedCount}\n`;
+            report += `Patients Still Waiting : ${priorityQueue.length}\n`;
+            report += `Emergency Beds In Use  : ${occupied} / 10 (Available: ${10 - occupied})\n`;
+            report += "----------------------------------------------------------------------------------------\n";
+            report += "PATIENT AUDIT LOGS:\n";
+            auditLogs.forEach(l => {
+                report += `[${l.time}] ER-${l.token} | ${l.name} | ${getTriageName(l.triage)} | ${l.status} | ${l.note}\n`;
+            });
+            report += "========================================================================================\n";
+            report += "End of Daily Summary Report.\n";
+
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `daily_er_report_${Date.now()}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function copyCCode() {
+            const code = document.getElementById('c-code-view').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('📋 C Source Code copied to clipboard!');
+            });
+        }
+
+        // Initialize with default sample data
+        window.addEventListener('DOMContentLoaded', () => {
+            // Seed a few emergency patients
+            const samples = [
+                { name: "Ramesh Verma", age: 30, gender: "Male", contact: "9123456780", complaint: "Severe Cardiac Arrest", triage: 1 },
+                { name: "Rajesh Sharma", age: 52, gender: "Male", contact: "9876543210", complaint: "Acute Chest Pain", triage: 2 },
+                { name: "Sneha Kapoor", age: 28, gender: "Female", contact: "9988776655", complaint: "Severe Abdominal Pain", triage: 3 },
+                { name: "Priya Singh", age: 24, gender: "Female", contact: "9988776655", complaint: "Minor laceration on finger", triage: 4 }
+            ];
+
+            samples.forEach(s => {
+                const token = nextToken++;
+                priorityQueue.push({ ...s, token, time: getNowTime() });
+                registeredCount++;
+                addLog(token, s.name, s.age, s.triage, 'Waiting', 'Initial ER Triage');
+            });
+
+            // Priority sort
+            priorityQueue.sort((a, b) => a.triage - b.triage);
+
+            updateUI();
+
+            // Fetch main.c to display in the synopsis tab
+            fetch('main.c')
+                .then(res => res.text())
+                .then(text => {
+                    document.getElementById('c-code-view').innerText = text;
+                })
+                .catch(() => {
+                    document.getElementById('c-code-view').innerText = "// main.c available in repository root.";
+                });
+        });
+    </script>
+</body>
+</html>

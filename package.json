@@ -2,9 +2,9 @@
   "name": "hospital-emergency-management-system",
   "version": "1.0.0",
   "description": "Hospital Emergency Management System (HEMS) - Priority Queue & Web Dashboard",
-  "main": "index.html",
+  "private": true,
   "scripts": {
-    "build": "echo Build completed successfully"
+    "build": "node -e \"const fs=require('fs'); if(!fs.existsSync('public')) fs.mkdirSync('public'); fs.copyFileSync('index.html', 'public/index.html'); if(fs.existsSync('main.c')) fs.copyFileSync('main.c', 'public/main.c'); console.log('Build completed: public/ directory populated.');\""
   },
   "dependencies": {
     "docx": "^9.15.0"

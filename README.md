@@ -99,6 +99,12 @@ make
 make run
 ```
 
+### Option 4: Live Web Dashboard (Vercel Deployment)
+This repository includes an interactive, responsive Web Dashboard (`index.html`) replicating the exact Priority Queue, Bed Management, and Audit Log algorithms for live presentations:
+1. Go to [Vercel](https://vercel.com) and click **"Add New Project"**.
+2. Select and import `sahilroykgp-art/mini-project`.
+3. Click **"Deploy"** (pre-configured with `vercel.json` for 0-config instant static deployment).
+
 ---
 
 ## 🔑 Default Credentials

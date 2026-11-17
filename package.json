@@ -1,4 +1,11 @@
 {
+  "name": "hospital-emergency-management-system",
+  "version": "1.0.0",
+  "description": "Hospital Emergency Management System (HEMS) - Priority Queue & Web Dashboard",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo Build completed successfully"
+  },
   "dependencies": {
     "docx": "^9.15.0"
   }

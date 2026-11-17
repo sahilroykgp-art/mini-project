@@ -2,17 +2,16 @@
 ========================================================================================
     HOSPITAL EMERGENCY MANAGEMENT SYSTEM (HEMS)
     
-    Academic Mini-Project in C for Bachelor of Computer Applications (BCA)
+    Academic Mini-Project for Bachelor of Computer Applications (BCA)
     Institution : Graphic Era (Deemed to be University), Dehradun
-    Student     : Sahil Roy (University Roll No. 2510610142)
+    Student     : Sahil Roy (Roll No. 2510610142)
     Supervisor  : Mr. Shubham Kumar (Assistant Professor)
     
-    Core Concepts & Data Structures:
-    1. Priority Queue using Linked List (ordered by Clinical Triage Urgency Level 1-5)
-    2. Dynamic Structures, Pointers & Modular Functions
-    3. Persistent File Handling ("er_patient_log.txt" & "daily_er_report.txt")
-    4. Role-Based Access Control (Receptionist Portal vs Medical Staff/Admin)
-    5. Emergency Ward Bed Allocation & Discharge System (10 Beds)
+    Core Features:
+    1. Priority Queue using Linked List (Triage Levels 1 to 5)
+    2. Emergency Ward Bed Management (10 Beds)
+    3. Role-Based Access: Receptionist vs Medical Staff / Admin (admin123)
+    4. File Persistence: er_patient_log.txt and daily_er_report.txt
 ========================================================================================
 */
 
@@ -25,94 +24,78 @@
 #define MAX_BEDS 10
 #define PATIENT_LOG_FILE "er_patient_log.txt"
 #define DAILY_REPORT_FILE "daily_er_report.txt"
-#define DEFAULT_ADMIN_PASSWORD "admin123"
+#define DEFAULT_ADMIN_PASS "admin123"
 
-/* ====================================================================================
-    DATA STRUCTURES
-==================================================================================== */
+/* ================= DATA STRUCTURES ================= */
 
-/* Patient Record Structure */
-typedef struct {
-    int token;                  /* Token ID (e.g. 1001, 1002...) */
-    char name[50];              /* Patient Full Name */
-    int age;                    /* Age in years */
-    char gender[10];            /* Male, Female, Other */
-    char contact[20];           /* Phone / Emergency Contact */
-    char complaint[100];        /* Chief Medical Complaint / Symptoms */
-    int triage_level;           /* 1 (Resuscitation) to 5 (Non-urgent) */
-    char reg_time[25];          /* Timestamp when registered */
-    char status[20];            /* "Waiting", "In Treatment", "Admitted", "Discharged" */
-    int assigned_bed;           /* Bed number (1-10) or 0 if none */
+typedef struct Patient {
+    int token;
+    char name[50];
+    int age;
+    char gender[10];
+    char contact[20];
+    char complaint[100];
+    int triage_level;       /* 1 (Resuscitation) to 5 (Non-Urgent) */
+    char reg_time[25];
+    char status[20];        /* Waiting, In Treatment, Admitted, Discharged */
+    int assigned_bed;
 } Patient;
 
-/* Node for Priority Queue (Linked List) */
 typedef struct PatientNode {
     Patient data;
     struct PatientNode* next;
 } PatientNode;
 
-/* Bed Structure for Emergency Ward */
-typedef struct {
-    int bed_id;                 /* Bed Number: 1 to MAX_BEDS */
-    int is_occupied;            /* 1 if occupied, 0 if vacant */
-    int patient_token;          /* Assigned Patient Token */
-    char patient_name[50];      /* Assigned Patient Name */
-    int triage_level;           /* Patient Triage Level */
-    char admitted_time[25];     /* Time of Bed Admission */
+typedef struct EmergencyBed {
+    int bed_id;
+    int is_occupied;
+    int patient_token;
+    char patient_name[50];
+    int triage_level;
+    char admitted_time[25];
 } EmergencyBed;
 
-/* Global System State */
 typedef struct {
-    PatientNode* queue_head;             /* Head of the Priority Queue */
-    int queue_count;                     /* Waiting patient count */
-    int next_token_id;                   /* Auto-incrementing token generator */
-    int total_registered_today;          /* Daily registration counter */
-    int total_treated_today;             /* Total patients treated */
-    int level_counts[6];                 /* Count per triage level (1 to 5) */
-    EmergencyBed beds[MAX_BEDS];         /* Emergency Ward Beds */
-    Patient currently_serving;           /* Patient currently in treatment */
-    int has_currently_serving;           /* 1 if trauma bay is active, 0 if idle */
-    char admin_password[32];             /* Admin/Staff Password */
+    PatientNode* queue_head;
+    int queue_count;
+    int next_token_id;
+    int total_registered_today;
+    int total_treated_today;
+    int level_counts[6];
+    EmergencyBed beds[MAX_BEDS];
+    Patient currently_serving;
+    int has_currently_serving;
+    char admin_password[32];
 } HEMS_State;
 
 HEMS_State g_hems;
 
-/* ====================================================================================
-    HELPER UTILITY FUNCTIONS
-==================================================================================== */
+/* ================= HELPER FUNCTIONS ================= */
 
-/* Formats current date and time */
-void getCurrentTimestamp(char* buffer, size_t size) {
+void getCurrentTimestamp(char* buf, size_t size) {
     time_t now = time(NULL);
     struct tm* t = localtime(&now);
-    if (t) {
-        strftime(buffer, size, "%Y-%m-%d %H:%M:%S", t);
-    } else {
-        snprintf(buffer, size, "2026-11-17 00:00:00");
-    }
+    if (t) strftime(buf, size, "%Y-%m-%d %H:%M:%S", t);
+    else snprintf(buf, size, "2026-11-17 00:00:00");
 }
 
-/* Reads a line of string safely */
-void getString(const char* prompt, char* buffer, int max_len) {
+void getString(const char* prompt, char* buf, int max_len) {
     printf("%s", prompt);
-    if (fgets(buffer, max_len, stdin) != NULL) {
-        size_t len = strlen(buffer);
-        if (len > 0 && buffer[len - 1] == '\n') {
-            buffer[len - 1] = '\0';
-        }
+    if (fgets(buf, max_len, stdin)) {
+        size_t len = strlen(buf);
+        if (len > 0 && buf[len - 1] == '\n') buf[len - 1] = '\0';
     } else {
-        buffer[0] = '\0';
+        buf[0] = '\0';
     }
 }
 
-/* Reads an integer safely within range [min_val, max_val] */
 int getInt(const char* prompt, int min_val, int max_val) {
     char buf[64];
     int val;
     while (1) {
         printf("%s", prompt);
-        if (fgets(buf, sizeof(buf), stdin) == NULL) {
-            if (feof(stdin)) exit(0); /* Clean exit on piped input end */
+        if (!fgets(buf, sizeof(buf), stdin)) {
+            if (feof(stdin)) exit(0);
             return min_val;
         }
         if (sscanf(buf, "%d", &val) == 1 && val >= min_val && val <= max_val) {
@@ -122,7 +105,6 @@ int getInt(const char* prompt, int min_val, int max_val) {
     }
 }
 
-/* Returns category name for triage level */
 const char* getTriageName(int level) {
     switch (level) {
         case 1: return "Level 1: Resuscitation (Highest)";
@@ -134,9 +116,7 @@ const char* getTriageName(int level) {
     }
 }
 
-/* ====================================================================================
-    BED MANAGEMENT MODULE
-==================================================================================== */
+/* ================= BED MANAGEMENT ================= */
 
 void initBeds(void) {
     for (int i = 0; i < MAX_BEDS; i++) {
@@ -153,8 +133,7 @@ void displayBedStatus(void) {
     printf("\n========================================================================================\n");
     printf("                                EMERGENCY WARD BED STATUS                               \n");
     printf("========================================================================================\n");
-    printf("%-6s | %-10s | %-9s | %-22s | %-8s | %-19s\n",
-           "BED #", "STATUS", "TOKEN #", "PATIENT NAME", "TRIAGE", "ADMITTED AT");
+    printf("%-6s | %-10s | %-9s | %-22s | %-8s | %-19s\n", "BED #", "STATUS", "TOKEN #", "PATIENT NAME", "TRIAGE", "ADMITTED AT");
     printf("----------------------------------------------------------------------------------------\n");
     int occupied = 0;
     for (int i = 0; i < MAX_BEDS; i++) {
@@ -162,11 +141,9 @@ void displayBedStatus(void) {
             occupied++;
             printf("%-6d | OCCUPIED   | ER-%-6d | %-22.22s | Level %-2d | %-19s\n",
                    g_hems.beds[i].bed_id, g_hems.beds[i].patient_token,
-                   g_hems.beds[i].patient_name, g_hems.beds[i].triage_level,
-                   g_hems.beds[i].admitted_time);
+                   g_hems.beds[i].patient_name, g_hems.beds[i].triage_level, g_hems.beds[i].admitted_time);
         } else {
-            printf("%-6d | VACANT     | -         | -                      | -        | -\n",
-                   g_hems.beds[i].bed_id);
+            printf("%-6d | VACANT     | -         | -                      | -        | -\n", g_hems.beds[i].bed_id);
         }
     }
     printf("========================================================================================\n");
@@ -184,10 +161,9 @@ int allocateBed(int token, const char* name, int triage_level) {
             return g_hems.beds[i].bed_id;
         }
     }
-    return 0; /* All beds are full */
+    return 0;
 }
 
-/* Prototype declaration for file logger used in discharge */
 void logPatientToFile(const Patient* p, const char* action_note);
 
 int dischargeBed(int bed_id) {
@@ -205,34 +181,24 @@ int dischargeBed(int bed_id) {
     g_hems.beds[idx].is_occupied = 0;
     g_hems.beds[idx].patient_token = 0;
     g_hems.beds[idx].patient_name[0] = '\0';
-    g_hems.beds[idx].triage_level = 0;
-    g_hems.beds[idx].admitted_time[0] = '\0';
     return 1;
 }
 
-/* ====================================================================================
-    PRIORITY QUEUE IMPLEMENTATION (Linked List)
-    - Lower triage number = Higher medical urgency (Level 1 > Level 2 ... > Level 5)
-    - Equal triage level preserves First-Come, First-Served (FIFO) ordering
-==================================================================================== */
+/* ================= PRIORITY QUEUE (LINKED LIST) ================= */
 
 void enqueuePriority(Patient p) {
     PatientNode* newNode = (PatientNode*)malloc(sizeof(PatientNode));
-    if (!newNode) {
-        printf("  [Error] Memory allocation failed during enqueue!\n");
-        return;
-    }
+    if (!newNode) return;
     newNode->data = p;
     newNode->next = NULL;
 
-    /* Insert at head if queue is empty or new patient has strictly higher priority */
-    if (g_hems.queue_head == NULL || p.triage_level < g_hems.queue_head->data.triage_level) {
+    /* Insert ordered by triage urgency (1 is highest priority; '<=' maintains FIFO) */
+    if (!g_hems.queue_head || p.triage_level < g_hems.queue_head->data.triage_level) {
         newNode->next = g_hems.queue_head;
         g_hems.queue_head = newNode;
     } else {
-        /* Traverse to priority position; '<=' ensures FIFO for same priority */
         PatientNode* curr = g_hems.queue_head;
-        while (curr->next != NULL && curr->next->data.triage_level <= p.triage_level) {
+        while (curr->next && curr->next->data.triage_level <= p.triage_level) {
             curr = curr->next;
         }
         newNode->next = curr->next;
@@ -242,7 +208,7 @@ void enqueuePriority(Patient p) {
 }
 
 int dequeuePriority(Patient* out_p) {
-    if (g_hems.queue_head == NULL) return 0; /* Queue is empty */
+    if (!g_hems.queue_head) return 0;
     PatientNode* temp = g_hems.queue_head;
     *out_p = temp->data;
     g_hems.queue_head = g_hems.queue_head->next;
@@ -267,22 +233,15 @@ void displayQueue(void) {
     int pos = 1;
     while (curr) {
         printf("%-5d | ER-%-5d | %-20.20s | %-4d | %-8.8s | %-26.26s | %-19s\n",
-               pos++,
-               curr->data.token,
-               curr->data.name,
-               curr->data.age,
-               curr->data.gender,
-               getTriageName(curr->data.triage_level),
-               curr->data.reg_time);
+               pos++, curr->data.token, curr->data.name, curr->data.age,
+               curr->data.gender, getTriageName(curr->data.triage_level), curr->data.reg_time);
         curr = curr->next;
     }
     printf("========================================================================================\n");
     printf("  Total Patients Waiting: %d\n", g_hems.queue_count);
 }
 
-/* ====================================================================================
-    FILE PERSISTENCE OPERATIONS
-==================================================================================== */
+/* ================= FILE OPERATIONS ================= */
 
 void logPatientToFile(const Patient* p, const char* action_note) {
     FILE* fp = fopen(PATIENT_LOG_FILE, "a");
@@ -344,16 +303,12 @@ void viewFileContent(const char* filename, const char* title) {
     printf("                               %s\n", title);
     printf("========================================================================================\n");
     char line[256];
-    while (fgets(line, sizeof(line), fp)) {
-        printf("%s", line);
-    }
+    while (fgets(line, sizeof(line), fp)) printf("%s", line);
     fclose(fp);
     printf("========================================================================================\n");
 }
 
-/* ====================================================================================
-    RECEPTIONIST ACTIONS
-==================================================================================== */
+/* ================= RECEPTIONIST WORKSPACE ================= */
 
 void registerNewPatient(void) {
     Patient p = {0};
@@ -365,26 +320,22 @@ void registerNewPatient(void) {
     printf("  Generated Token ID   : ER-%d\n", p.token);
 
     getString("  Enter Patient Name   : ", p.name, sizeof(p.name));
-    if (p.name[0] == '\0') strcpy(p.name, "Anonymous Patient");
+    if (!p.name[0]) strcpy(p.name, "Anonymous Patient");
 
     p.age = getInt("  Enter Patient Age    : ", 0, 130);
 
     printf("  Select Gender:\n    1. Male\n    2. Female\n    3. Other\n");
     int gChoice = getInt("  Enter Choice (1-3)   : ", 1, 3);
-    if (gChoice == 1) strcpy(p.gender, "Male");
-    else if (gChoice == 2) strcpy(p.gender, "Female");
-    else strcpy(p.gender, "Other");
+    strcpy(p.gender, gChoice == 1 ? "Male" : (gChoice == 2 ? "Female" : "Other"));
 
     getString("  Contact / Phone No.  : ", p.contact, sizeof(p.contact));
-    if (p.contact[0] == '\0') strcpy(p.contact, "N/A");
+    if (!p.contact[0]) strcpy(p.contact, "N/A");
 
     getString("  Chief Complaint/Signs: ", p.complaint, sizeof(p.complaint));
-    if (p.complaint[0] == '\0') strcpy(p.complaint, "Emergency Trauma");
+    if (!p.complaint[0]) strcpy(p.complaint, "Emergency Trauma");
 
     printf("\n  --- Clinical Triage Priority Assessment ---\n");
-    for (int i = 1; i <= 5; i++) {
-        printf("    [%d] %s\n", i, getTriageName(i));
-    }
+    for (int i = 1; i <= 5; i++) printf("    [%d] %s\n", i, getTriageName(i));
     p.triage_level = getInt("\n  Assign Triage Level (1-5): ", 1, 5);
 
     getCurrentTimestamp(p.reg_time, sizeof(p.reg_time));
@@ -404,17 +355,13 @@ void searchPatientRecord(void) {
     printf("\n========================================================================================\n");
     printf("                               SEARCH PATIENT EMERGENCY RECORDS                         \n");
     printf("========================================================================================\n");
-    printf("  [1] Search by Token ID\n");
-    printf("  [2] Search by Patient Name\n");
+    printf("  [1] Search by Token ID\n  [2] Search by Patient Name\n");
     int mode = getInt("  Choose search method (1-2): ", 1, 2);
 
     char query[64] = {0};
     int searchToken = 0;
-    if (mode == 1) {
-        searchToken = getInt("  Enter Patient Token Number (e.g., 1001): ", 1, 999999);
-    } else {
-        getString("  Enter Patient Name (or part): ", query, sizeof(query));
-    }
+    if (mode == 1) searchToken = getInt("  Enter Patient Token Number: ", 1, 999999);
+    else getString("  Enter Patient Name (or part): ", query, sizeof(query));
 
     FILE* fp = fopen(PATIENT_LOG_FILE, "r");
     if (!fp) {
@@ -422,8 +369,7 @@ void searchPatientRecord(void) {
         return;
     }
 
-    printf("\n  Matching Log Records:\n");
-    printf("----------------------------------------------------------------------------------------\n");
+    printf("\n  Matching Log Records:\n----------------------------------------------------------------------------------------\n");
     char line[256];
     int found = 0;
     while (fgets(line, sizeof(line), fp)) {
@@ -451,28 +397,23 @@ void searchPatientRecord(void) {
     else printf("  Total matches found: %d\n", found);
 }
 
-/* ====================================================================================
-    MEDICAL STAFF & ADMIN ACTIONS
-==================================================================================== */
+/* ================= MEDICAL STAFF & ADMIN WORKSPACE ================= */
 
 void advanceHighestPriorityPatient(void) {
     printf("\n========================================================================================\n");
     printf("                         ADVANCE HIGHEST-PRIORITY PATIENT (DEQUEUE)                     \n");
     printf("========================================================================================\n");
 
-    if (g_hems.queue_head == NULL) {
+    if (!g_hems.queue_head) {
         printf("  [i] The emergency queue is currently empty. No patients waiting.\n");
         return;
     }
 
-    /* Disposition for previously serving patient */
     if (g_hems.has_currently_serving) {
         printf("  [!] Notice: ER-%d (%s) is currently in treatment.\n",
                g_hems.currently_serving.token, g_hems.currently_serving.name);
         printf("  Select disposition for current patient:\n");
-        printf("    [1] Complete Treatment & Discharge\n");
-        printf("    [2] Admit to Emergency Bed\n");
-        printf("    [3] Keep Active & Force Call Next Patient\n");
+        printf("    [1] Complete Treatment & Discharge\n    [2] Admit to Emergency Bed\n    [3] Keep Active & Force Call Next Patient\n");
         int disp = getInt("  Choose option (1-3): ", 1, 3);
         if (disp == 1) {
             strcpy(g_hems.currently_serving.status, "Discharged");
@@ -608,9 +549,7 @@ void changePassword(void) {
     }
 }
 
-/* ====================================================================================
-    LIVE STATUS & ABOUT VIEWS
-==================================================================================== */
+/* ================= LIVE STATUS & SYNOPSIS ================= */
 
 void liveStatusDisplay(void) {
     int occupied = 0;
@@ -630,17 +569,16 @@ void liveStatusDisplay(void) {
         printf("    Token: ER-%d | Name: %s (Age: %d, %s)\n",
                g_hems.currently_serving.token, g_hems.currently_serving.name,
                g_hems.currently_serving.age, g_hems.currently_serving.gender);
-        printf("    Category : %s\n", getTriageName(g_hems.currently_serving.triage_level));
-        printf("    Complaint: %s\n", g_hems.currently_serving.complaint);
+        printf("    Category : %s\n    Complaint: %s\n",
+               getTriageName(g_hems.currently_serving.triage_level), g_hems.currently_serving.complaint);
     } else {
         printf("    Trauma Bay is currently idle / Ready for next patient.\n");
     }
     printf("----------------------------------------------------------------------------------------\n");
     printf("  [STATISTICS SNAPSHOT]:\n");
-    printf("    Waiting in Queue : %d\n", g_hems.queue_count);
-    printf("    Treated Today    : %d\n", g_hems.total_treated_today);
-    printf("    Total Registered : %d\n", g_hems.total_registered_today);
-    printf("    Beds In Use      : %d / %d (Available: %d)\n", occupied, MAX_BEDS, MAX_BEDS - occupied);
+    printf("    Waiting in Queue : %d\n    Treated Today    : %d\n", g_hems.queue_count, g_hems.total_treated_today);
+    printf("    Total Registered : %d\n    Beds In Use      : %d / %d (Available: %d)\n",
+           g_hems.total_registered_today, occupied, MAX_BEDS, MAX_BEDS - occupied);
     printf("========================================================================================\n");
 }
 
@@ -650,23 +588,20 @@ void displayAboutSynopsis(void) {
     printf("========================================================================================\n");
     printf("  Project Title  : Hospital Emergency Management System (HEMS)\n");
     printf("  Degree Award   : Bachelor of Computer Applications (BCA)\n");
-    printf("  Candidate Name : Sahil Roy\n");
-    printf("  Roll Number    : 2510610142\n");
+    printf("  Candidate Name : Sahil Roy | Roll No: 2510610142\n");
     printf("  Supervisor     : Mr. Shubham Kumar (Assistant Professor)\n");
     printf("  Institution    : Graphic Era (Deemed to be University), Dehradun\n");
     printf("  Academic Year  : 2026\n");
     printf("----------------------------------------------------------------------------------------\n");
     printf("  Key Technical Features:\n");
-    printf("  1. Priority Queue       : Linked List implementation ordered by urgency (Level 1-5)\n");
+    printf("  1. Priority Queue       : Ordered Linked List based on Clinical Triage (Level 1-5)\n");
     printf("  2. Role Separation      : Receptionist (Enqueue) vs Medical Staff (Dequeue/Admin)\n");
     printf("  3. File Persistence     : Audit log ('%s'), Daily report ('%s')\n", PATIENT_LOG_FILE, DAILY_REPORT_FILE);
     printf("  4. Bed Management       : Tracking %d Emergency Ward Beds\n", MAX_BEDS);
     printf("========================================================================================\n");
 }
 
-/* ====================================================================================
-    MENUS
-==================================================================================== */
+/* ================= MENUS & MAIN ================= */
 
 void receptionistMenu(void) {
     while (1) {
@@ -718,10 +653,6 @@ void medicalStaffMenu(void) {
     }
 }
 
-/* ====================================================================================
-    INITIALIZATION & CLEANUP
-==================================================================================== */
-
 void restoreTokenCounter(void) {
     FILE* fp = fopen(PATIENT_LOG_FILE, "r");
     if (!fp) return;
@@ -729,10 +660,8 @@ void restoreTokenCounter(void) {
     int max_token = 1000;
     while (fgets(line, sizeof(line), fp)) {
         int token = 0;
-        if (sscanf(line, "%d", &token) == 1) {
-            if (token > max_token && token < 1000000) {
-                max_token = token;
-            }
+        if (sscanf(line, "%d", &token) == 1 && token > max_token && token < 1000000) {
+            max_token = token;
         }
     }
     fclose(fp);
@@ -753,7 +682,7 @@ void cleanupSystem(void) {
 void initSystem(void) {
     memset(&g_hems, 0, sizeof(HEMS_State));
     g_hems.next_token_id = 1001;
-    strcpy(g_hems.admin_password, DEFAULT_ADMIN_PASSWORD);
+    strcpy(g_hems.admin_password, DEFAULT_ADMIN_PASS);
     initBeds();
 
     FILE* fp = fopen(PATIENT_LOG_FILE, "r");
@@ -773,10 +702,6 @@ void initSystem(void) {
         restoreTokenCounter();
     }
 }
-
-/* ====================================================================================
-    MAIN FUNCTION
-==================================================================================== */
 
 int main(void) {
     initSystem();
@@ -800,20 +725,10 @@ int main(void) {
 
         int roleChoice = getInt("  Select Role / Option (1-5): ", 1, 5);
         switch (roleChoice) {
-            case 1:
-                receptionistMenu();
-                break;
-            case 2:
-                if (verifyAdminLogin()) {
-                    medicalStaffMenu();
-                }
-                break;
-            case 3:
-                liveStatusDisplay();
-                break;
-            case 4:
-                displayAboutSynopsis();
-                break;
+            case 1: receptionistMenu(); break;
+            case 2: if (verifyAdminLogin()) medicalStaffMenu(); break;
+            case 3: liveStatusDisplay(); break;
+            case 4: displayAboutSynopsis(); break;
             case 5:
                 printf("\n  Saving daily report before exiting...\n");
                 generateDailyReport();

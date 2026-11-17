@@ -1,12 +1,9 @@
 {
   "name": "hospital-emergency-management-system",
   "version": "1.0.0",
-  "description": "Hospital Emergency Management System (HEMS) - Priority Queue & Web Dashboard",
+  "description": "Hospital Emergency Management System (HEMS) - Priority Queue in C & Live Web Dashboard",
   "private": true,
   "scripts": {
-    "build": "node -e \"const fs=require('fs'); if(!fs.existsSync('public')) fs.mkdirSync('public'); fs.copyFileSync('index.html', 'public/index.html'); if(fs.existsSync('main.c')) fs.copyFileSync('main.c', 'public/main.c'); console.log('Build completed: public/ directory populated.');\""
-  },
-  "dependencies": {
-    "docx": "^9.15.0"
+    "build": "node -e \"const fs=require('fs'); if(!fs.existsSync('public')) fs.mkdirSync('public'); fs.copyFileSync('index.html', 'public/index.html'); if(fs.existsSync('main.c')) fs.copyFileSync('main.c', 'public/main.c'); console.log('Build completed: static public/ directory ready.');\""
   }
 }

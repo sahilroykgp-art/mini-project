@@ -1,0 +1,22 @@
+========================================================================================================================
+                            HOSPITAL EMERGENCY MANAGEMENT SYSTEM - PATIENT AUDIT LOG                                   
+========================================================================================================================
+TOKEN    | PATIENT NAME         | AGE  | GENDER | CONTACT      | TRIAGE  | TIMESTAMP           | STATUS       | EVENT NOTE     
+------------------------------------------------------------------------------------------------------------------------
+1001     | Rajesh Sharma        | 54   | Male   | 9876543210   | Level 2 | 2026-10-28 08:15:20 | Admitted     | Bed Allocated  
+1002     | Anita Deshmukh       | 42   | Female | 9823011223   | Level 1 | 2026-10-28 08:45:10 | Admitted     | Bed Allocated  
+1003     | Rohan Verma          | 19   | Male   | 9145678901   | Level 3 | 2026-10-28 09:10:45 | Discharged   | Treated & Disch
+1004     | Kavita Sen           | 67   | Female | 9711223344   | Level 1 | 2026-10-28 09:35:12 | Admitted     | Bed Allocated  
+1005     | Amit Patel           | 31   | Male   | 9900112233   | Level 4 | 2026-10-28 10:05:30 | Discharged   | Treated & Disch
+1006     | Sunita Rawat         | 25   | Female | 9810987654   | Level 5 | 2026-10-28 10:40:15 | Discharged   | Treated & Disch
+1007     | Vikramaditya Negi    | 48   | Male   | 9897123456   | Level 2 | 2026-10-28 11:15:00 | Admitted     | Bed Allocated  
+1008     | Pooja Bhatt          | 36   | Female | 9756123987   | Level 3 | 2026-10-28 12:00:25 | In Treatment | Advanced to Doc
+1009     | Deepak Chauhan       | 50   | Male   | 9811445566   | Level 1 | 2026-10-28 12:45:40 | Admitted     | Bed Allocated  
+1010     | Meera Joshi          | 29   | Female | 9412356789   | Level 4 | 2026-10-28 13:20:10 | Discharged   | Treated & Disch
+1011     | Harish Chandra       | 63   | Male   | 9837112244   | Level 2 | 2026-10-28 14:05:18 | Waiting      | Registered     
+1012     | Neha Choudhary       | 22   | Female | 9927654321   | Level 3 | 2026-10-28 14:50:33 | Waiting      | Registered     
+1013     | Saurabh Bisht        | 38   | Male   | 9760123450   | Level 5 | 2026-10-28 15:30:00 | Waiting      | Registered     
+1014     | Priyanka Uniyal      | 45   | Female | 9634567890   | Level 2 | 2026-10-28 16:15:45 | Waiting      | Registered     
+1015     | Manmohan Thapa       | 71   | Male   | 9897001122   | Level 1 | 2026-10-28 17:00:10 | Waiting      | Registered     
+1016     | s                    | 23   | Male   | 5513123312   | Level 1 | 2026-10-29 14:47:32 | Waiting      | Registered     
+1017     | hhhhhhhhhhhhhhhsa    | 0    | Male   | 456987321    | Level 1 | 2026-10-29 16:03:54 | Waiting      | Registered     

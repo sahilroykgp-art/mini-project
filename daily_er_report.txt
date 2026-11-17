@@ -1,0 +1,30 @@
+========================================================================================
+                        HOSPITAL EMERGENCY ROOM - DAILY AUDIT REPORT                    
+========================================================================================
+Generated On           : 2026-10-28 20:00:00
+Emergency Department   : Trauma & Acute Care Center
+Total Registered Today : 15
+Total Patients Treated : 10
+Patients Still Waiting : 5
+Emergency Beds In Use  : 5 / 10 (Available: 5)
+----------------------------------------------------------------------------------------
+TRIAGE SEVERITY BREAKDOWN (REGISTERED TODAY):
+  Level 1 (Resuscitation - Immediate Threat) : 4
+  Level 2 (Emergent / Critical)              : 4
+  Level 3 (Urgent)                           : 3
+  Level 4 (Less Urgent)                      : 2
+  Level 5 (Non-Urgent / Routine)             : 2
+----------------------------------------------------------------------------------------
+EMERGENCY BED STATUS SNAPSHOT:
+  Bed #01 : OCCUPIED | Token #1001 (Rajesh Sharma) | Admitted: 2026-10-28 08:15:20
+  Bed #02 : OCCUPIED | Token #1002 (Anita Deshmukh) | Admitted: 2026-10-28 08:45:10
+  Bed #03 : OCCUPIED | Token #1004 (Kavita Sen) | Admitted: 2026-10-28 09:35:12
+  Bed #04 : OCCUPIED | Token #1007 (Vikramaditya Negi) | Admitted: 2026-10-28 11:15:00
+  Bed #05 : OCCUPIED | Token #1009 (Deepak Chauhan) | Admitted: 2026-10-28 12:45:40
+  Bed #06 : VACANT
+  Bed #07 : VACANT
+  Bed #08 : VACANT
+  Bed #09 : VACANT
+  Bed #10 : VACANT
+========================================================================================
+End of Daily Summary Report.

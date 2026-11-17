@@ -1,0 +1,12 @@
+# Compiled binaries and build objects
+*.exe
+*.o
+*.obj
+
+# Node dependencies (used only for doc scripts)
+node_modules/
+
+# Runtime archives and temporary files
+daily_er_report_archive_*.txt
+*.tmp
+*.log
